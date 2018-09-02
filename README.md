@@ -18,3 +18,23 @@ I need to orchestrate up multiple instances of the microservices
 I would like to orchestrate this with docker first
 - then later minikube?
 - also look for a chance to "use" Chef / Terraform too
+
+Instructions:
+So far this much is working:
+1) start up the nats server as per the doc here
+	https://www.nats.io/documentation/tutorials/gnatsd-docker/
+	(after the first time, docker start / stop should work)
+
+	- you could run against the public nats demo server
+
+2) run the java application 
+	(I am just running it from eclipse so far)
+
+3) telnet to the nats server, and publish messages
+	e.g.
+
+	telnet <nats ip> 4222
+	pub alphabet.A 1
+	A
+
+4) Observe the microservice's behaviour
