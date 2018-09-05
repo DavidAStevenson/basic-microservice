@@ -28,7 +28,9 @@ So far this much is working:
 	- you could run against the public nats demo server
 
 2) run the java application 
-	(I am just running it from eclipse so far)
+	to run from command line:
+	
+	java -cp target/basic-microservice-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.stevenson.basicmicroservice.Application alphabet.A C
 
 3) telnet to the nats server, and publish messages
 	e.g.
