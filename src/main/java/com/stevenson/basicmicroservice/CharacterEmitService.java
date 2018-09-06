@@ -21,31 +21,29 @@ public class CharacterEmitService {
 	public char OnCharEvent(char input) {
 		
 		boolean pubFlag = false;
-		System.out.println("OnCharEvent:" + input + ", " + inputLetter);
 		
 		if (input == inputLetter) {
 			pubFlag = true;
-		}
-		System.out.println("OnCharEvent:" + pubFlag);
-		
-		System.out.println("OnCharEvent:" + Character.toString(input));
-		if (isLastLetter(input)) {
-			String output = Character.toString(firstCharacter());
-			if (pubFlag) {
-				System.out.println("OnCharEvent: publish: " + subject + "," + output);
-				publisher.publish(subject + output, output);
-			}
-			return firstCharacter();
 		} else {
-			input+=1;
-			String output = Character.toString(input);
-			System.out.println("OnCharEvent: pre-publish: " + subject + "," + output);
-			if (pubFlag) {
-				System.out.println("OnCharEvent: publish: " + subject + "," + output);
-				publisher.publish(subject + output, output);				
-			}
 			return input;
 		}
+
+		char retval = 0;
+		if (isLastLetter(input)) {
+			retval = firstCharacter();
+		} else {
+			input+=1;
+			retval = input;
+		}
+
+		if (pubFlag) {
+			if (publisher != null) {
+				String output = Character.toString(retval);
+				publisher.publish(subject + output, output);
+			}
+		}
+
+		return retval;
 	}
 
 	public void setPublisher(NatsPublisher pubby, String subby) {
@@ -55,6 +53,10 @@ public class CharacterEmitService {
 
 	public void setInputCharacter(String string) {
 		inputLetter = string.toCharArray()[0];
+	}
+
+	public void setInputCharacter(char character) {
+		inputLetter = character;
 	}
 
 }

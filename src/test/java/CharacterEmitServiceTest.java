@@ -29,10 +29,11 @@ class CharacterEmitServiceTest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-
+	
 	@Test
 	void test1emits2() {
 		char input = '1';
+		ces.setInputCharacter(input);
 		char output = ces.OnCharEvent(input);
 		assertEquals('2', output);
 	}
@@ -40,6 +41,7 @@ class CharacterEmitServiceTest {
 	@Test
 	void testAemitsB() {
 		char input = 'A';
+		ces.setInputCharacter(input);
 		char output = ces.OnCharEvent(input);
 		assertEquals('B', output);
 	}
@@ -47,6 +49,7 @@ class CharacterEmitServiceTest {
 	@Test
 	void testYemitsZ() {
 		char input = 'Y';
+		ces.setInputCharacter(input);
 		char output = ces.OnCharEvent(input);
 		assertTrue('Z' == output);	
 	}
@@ -54,7 +57,22 @@ class CharacterEmitServiceTest {
 	@Test
 	void testZemitsA() {
 		char input = 'Z';
+		ces.setInputCharacter(input);
 		char output = ces.OnCharEvent(input);
 		assertEquals('A', output);	
+	}
+	
+	@Test
+	void testAProcessorIgnoresB() {
+		ces.setInputCharacter('A');
+		char output = ces.OnCharEvent('B');
+		assertEquals('B', output); 
+	}
+	
+	@Test
+	void testBProcessorReturnsC() {
+		ces.setInputCharacter('B');
+		char output = ces.OnCharEvent('B');
+		assertEquals('C', output); 
 	}
 }
