@@ -21,21 +21,34 @@ public class Application {
 		CharacterEmitService ces = new CharacterEmitService();
 
 		NatsPublisher pubby = new NatsPublisher();
-		// TODO - handle connection failure gracefully
-		pubby.connect("nats://192.168.99.100:4222");
+		if (!pubby.connect("nats://192.168.99.100:4222")) {
+			System.out.println("Failed to open publisher connection, quitting...");
+			System.exit(1);
+		}
 		// "inject" publish mechanism
 		ces.setPublisher(pubby, "alphabet.");
 		ces.setInputCharacter(args[1]);
 		
 		// "inject" subscription mechanism
 		NatsSubscriber middleware = new NatsSubscriber();
-		// TODO - handle connection failure gracefully
-		middleware.connect("nats://192.168.99.100:4222");
-		
+		if (!middleware.connect("nats://192.168.99.100:4222")) {
+			System.out.println("Failed to open subscriber connection, quitting...");
+			connectionsDown(pubby, middleware);
+			System.exit(1);
+		}
+	
 		middleware.consume(args[0], 10, ces);
 		
-		middleware.disconnect();
-		pubby.disconnect();
+		connectionsDown(pubby, middleware);
+	}
+	
+	private static void connectionsDown(NatsPublisher p, NatsSubscriber s) {
+		if (p != null) {
+			p.disconnect();
+		}
+		if (s != null) {
+			s.disconnect();			
+		}
 	}
 
 }

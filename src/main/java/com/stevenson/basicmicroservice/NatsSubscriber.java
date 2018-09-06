@@ -10,21 +10,28 @@ import io.nats.client.Nats;
 public class NatsSubscriber {
 
 	private Connection nc;
+	private boolean connected = false;
 
-	public void connect(String server) {
+	public boolean connect(String server) {
 		try {
 			nc = Nats.connect(server);
 			if (nc != null) {
+				connected = true;
 				System.out.println("Established a Nats connection...");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return;
 		}
+		return connected;
 	}
 	
 	public void consume(String subject, int msgCount, CharacterEmitService ces) {
 
+		if (!connected) {
+			System.out.println("Cannot consume - connection has not be made");
+			return;
+		}
+		
 		CountDownLatch latch = new CountDownLatch(msgCount);
 		if (0 == msgCount) {
 			System.out.println("Running indefinitely...");
@@ -51,8 +58,13 @@ public class NatsSubscriber {
 	}
 	
 	public void disconnect() {
+		if (!connected) {
+			return;
+		}
+
 		try {
 			nc.close();
+			connected = false;
 			System.out.println("Closed the connection.");
 		} catch (Exception e) {
 			e.printStackTrace();
