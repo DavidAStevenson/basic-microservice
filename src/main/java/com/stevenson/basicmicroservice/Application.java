@@ -21,6 +21,7 @@ public class Application {
 		CharacterEmitService ces = new CharacterEmitService();
 
 		NatsPublisher pubby = new NatsPublisher();
+		// TODO - handle connection failure gracefully
 		pubby.connect("nats://192.168.99.100:4222");
 		// "inject" publish mechanism
 		ces.setPublisher(pubby, "alphabet.");
@@ -28,6 +29,7 @@ public class Application {
 		
 		// "inject" subscription mechanism
 		NatsSubscriber middleware = new NatsSubscriber();
+		// TODO - handle connection failure gracefully
 		middleware.connect("nats://192.168.99.100:4222");
 		
 		middleware.consume(args[0], 10, ces);
