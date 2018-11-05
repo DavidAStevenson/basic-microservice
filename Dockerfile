@@ -4,5 +4,5 @@ MAINTAINER David Stevenson <david.35472@gmail.com>
 
 ARG JAR_FILE=target/basic-microservice-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-Xmx512m","-cp", "/app.jar", "com.stevenson.basicmicroservice.Application"]
+ENTRYPOINT ["java", "-Xms16m", "-Xmx32m","-cp", "/app.jar", "com.stevenson.basicmicroservice.Application"]
 CMD ["alphabet.*", "A"]
